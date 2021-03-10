@@ -75,6 +75,8 @@ services.AddAuthentication()
     });
 ```
 
+Refer to [IpAddressRange](https://github.com/jsakamoto/ipaddressrange) library to learn about the syntax.
+
 Once the request IP is matched by any of the ranges, a `ClaimsPrincipal` is created with following claims:
 
 - Name: Hostname resolved for the IP.  
