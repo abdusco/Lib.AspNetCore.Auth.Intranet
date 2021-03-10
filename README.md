@@ -81,6 +81,7 @@ Once the request IP is matched by any of the ranges, a `ClaimsPrincipal` is crea
 
 - Name: Hostname resolved for the IP.  
   Hostname resolution times out after 1 second, you can adjust it with `options.HostnameResolutionTimeout` option.
+  If it times out, IP address is used as the name.
 - NameIdentifier: IP address
 
 You can hook up to `options.Events.OnAuthenticated` and modify the claims principal.
