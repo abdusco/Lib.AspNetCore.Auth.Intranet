@@ -80,14 +80,14 @@ services.AddAuthentication()
 Refer to [IpAddressRange](https://github.com/jsakamoto/ipaddressrange) library to learn about the syntax. 
 You can check the how CIDRs are resolved [using this tool](https://www.ipaddressguide.com/cidr).
 
-Once the request IP is matched by any of the ranges, a `ClaimsPrincipal` is created with following claims:
+Once the request IP is matched by any of the ranges, a `ClaimsPrincipal` is created and populated with following the claims:
 
-- Name: Hostname resolved for the IP.  
+- **Name**: Hostname resolved for the IP.  
   Hostname resolution times out after 1 second, you can adjust it with `options.HostnameResolutionTimeout` option.
   If it times out, IP address is used as the name.
-- NameIdentifier: IP address
+- **NameIdentifier**: IP address
 
-You can hook up to `options.Events.OnAuthenticated` and modify the claims principal.
+You can hook into `OnAuthenticated` event and modify the claims principal.
 
 ```c#
 services.AddAuthentication()
