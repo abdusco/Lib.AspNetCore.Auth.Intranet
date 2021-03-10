@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NetTools;
 
 #nullable enable
 namespace Lib.AspNetCore.Auth.Intranet
@@ -38,12 +37,13 @@ namespace Lib.AspNetCore.Auth.Intranet
             }
 
             var ipAddress = messageReceivedContext.IpAddress ?? Context.Connection.RemoteIpAddress;
-
-            if (!Options.AllowedIpRanges.Any(range => range.Contains(ipAddress)))
+            var matchedRange = Options.AllowedIpRanges.FirstOrDefault(range => range.Contains(ipAddress));
+            if (matchedRange == null)
             {
                 return AuthenticateResult.Fail(new SecurityException($"IP {ipAddress} isn't matched by any range"));
             }
 
+            Logger.LogInformation("Connection from {IpAddress} is allowed by the range {IpRange}", ipAddress, matchedRange.ToString());
             var identity = new ClaimsIdentity(Scheme.Name);
 
             var hostname = await GetHostnameAsync(ipAddress) ?? ipAddress.ToString();
@@ -65,7 +65,7 @@ namespace Lib.AspNetCore.Auth.Intranet
             }
 
             authenticatedContext.Success();
-            return authenticatedContext.Result;
+            return authenticatedContext.Result!;
         }
 
         private async Task<string?> GetHostnameAsync(IPAddress ipAddress)
