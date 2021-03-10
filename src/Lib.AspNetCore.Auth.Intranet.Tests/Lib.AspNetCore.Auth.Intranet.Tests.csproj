@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Lib.AspNetCore.Auth.Intranet\Lib.AspNetCore.Auth.Intranet.csproj" />
+      <ProjectReference Include="..\Lib.AspNetCore.Auth.Intranet\Lib.AspNetCore.Auth.Intranet.csproj" />
     </ItemGroup>
 
 </Project>
