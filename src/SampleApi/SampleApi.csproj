@@ -2,10 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Lib.AspNetCore.Auth.Intranet\Lib.AspNetCore.Auth.Intranet.csproj" />
     </ItemGroup>
-
+    
 </Project>
