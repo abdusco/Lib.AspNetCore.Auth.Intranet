@@ -43,7 +43,16 @@ namespace Lib.AspNetCore.Auth.Intranet
                 return AuthenticateResult.Fail(new SecurityException($"IP {ipAddress} isn't matched by any range"));
             }
 
-            Logger.LogInformation("Connection from {IpAddress} is allowed by the range {IpRange}", ipAddress, matchedRange.ToString());
+            var matchContext = new AddressMatchedContext(Context, Scheme, Options)
+                {IpAddress = ipAddress, IpAddressRange = matchedRange};
+            await Events.AddressMatched(matchContext);
+            if (matchContext.Result != null)
+            {
+                return matchContext.Result;
+            }
+
+            Logger.LogInformation("Connection from {IpAddress} is allowed by the range {IpRange}", ipAddress,
+                matchedRange.ToString());
             var identity = new ClaimsIdentity(Scheme.Name);
 
             var hostname = await GetHostnameAsync(ipAddress) ?? ipAddress.ToString();

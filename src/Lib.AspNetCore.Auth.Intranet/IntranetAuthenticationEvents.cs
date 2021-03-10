@@ -11,9 +11,12 @@ namespace Lib.AspNetCore.Auth.Intranet
         /// </summary>
         public Func<MessageReceivedContext, Task> OnMessageReceived { get; set; } = context => Task.CompletedTask;
 
+        public Func<AddressMatchedContext, Task> OnAddressMatched { get; set; } = context => Task.CompletedTask;
+
         public Func<AuthenticatedContext, Task> OnAuthenticated { get; set; } = context => Task.CompletedTask;
 
         public virtual Task MessageReceived(MessageReceivedContext context) => OnMessageReceived(context);
+        public virtual Task AddressMatched(AddressMatchedContext context) => OnAddressMatched(context);
         public virtual Task Authenticated(AuthenticatedContext context) => OnAuthenticated(context);
     }
 }
