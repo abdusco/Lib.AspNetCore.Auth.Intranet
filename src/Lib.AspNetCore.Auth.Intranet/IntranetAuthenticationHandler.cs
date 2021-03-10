@@ -23,7 +23,7 @@ namespace Lib.AspNetCore.Auth.Intranet
 
         protected new IntranetAuthenticationEvents Events
         {
-            get => (IntranetAuthenticationEvents) base.Events;
+            get => (IntranetAuthenticationEvents) base.Events!;
             set => base.Events = value;
         }
 
@@ -36,7 +36,8 @@ namespace Lib.AspNetCore.Auth.Intranet
                 return messageReceivedContext.Result;
             }
 
-            var ipAddress = messageReceivedContext.IpAddress ?? Context.Connection.RemoteIpAddress;
+            var ipAddress = messageReceivedContext.IpAddress ?? Context.Connection.RemoteIpAddress ??
+                throw new ArgumentNullException(nameof(IPAddress), "IP address cannot be null");
             var matchedRange = Options.AllowedIpRanges.FirstOrDefault(range => range.Contains(ipAddress));
             if (matchedRange == null)
             {
