@@ -96,11 +96,9 @@ services.AddAuthentication()
         options.Events.OnAuthenticated = context =>
         {
             // assign admin role
-            context.Principal = new ClaimsPrincipal(new ClaimsIdentity(
-                new []{new Claim(ClaimTypes.Role, "admin")}.Concat(context.Principal.Claims), 
-                context.Scheme.Name
-            ));
-
+            var identity = (ClaimsIdentity) context.Principal.Identity;
+            identity.AddClaim(new Claim(ClaimTypes.Role, "admin"));
+            
             return Task.CompletedTask;
         };
     });

@@ -21,38 +21,36 @@ namespace SampleApi
         }
 
         public IConfiguration Configuration { get; }
-        
+
         private class AppIntranetOptions
         {
             public List<string> IpRanges { get; set; } = new List<string>();
             public List<string> AssignedRoles { get; set; } = new List<string>();
             public List<IPAddressRange> AllowedIpRanges => IpRanges.Select(IPAddressRange.Parse).ToList();
         }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
             });
-            
+
             services.AddControllers();
-            
+
             var intranetOptions = Configuration.GetSection("IntranetAuth").Get<AppIntranetOptions>();
             services.AddAuthentication()
                 .AddIntranet(options =>
                 {
                     options.AllowedIpRanges = intranetOptions.AllowedIpRanges;
                     options.HostnameResolutionTimeout = TimeSpan.FromSeconds(1);
-                    
+
                     options.Events.OnAuthenticated = context =>
                     {
-                        // assign roles to users authenticated with intranet
-                        context.Principal = new ClaimsPrincipal(new ClaimsIdentity(
-                            intranetOptions.AssignedRoles
-                                .Select(r => new Claim(ClaimTypes.Role, r))
-                                .Concat(context.Principal.Claims), context.Scheme.Name));
-
+                        var identity = (ClaimsIdentity) context.Principal.Identity;
+                        identity.AddClaims(
+                            intranetOptions.AssignedRoles.Select(r => new Claim(ClaimTypes.Role, r))
+                        );
                         return Task.CompletedTask;
                     };
                 });
