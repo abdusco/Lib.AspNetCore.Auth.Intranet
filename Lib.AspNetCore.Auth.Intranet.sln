@@ -1,6 +1,5 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.Auth.Intranet", "src\AbdusCo.Auth.Intranet\AbdusCo.Auth.Intranet.csproj", "{B81AC1B1-8C5D-436D-ACA1-5EA32F03AB27}"
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.AspNetCore.Auth.Intranet", "src\Lib.AspNetCore.Auth.Intranet\Lib.AspNetCore.Auth.Intranet.csproj", "{B81AC1B1-8C5D-436D-ACA1-5EA32F03AB27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApi", "src\SampleApi\SampleApi.csproj", "{1E573D8C-747B-4E7F-AE4C-5246CB40846F}"
 EndProject

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace AbdusCo.Auth.Intranet
+namespace Lib.AspNetCore.Auth.Intranet
 {
     public class IntranetAuthenticationEvents
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace AbdusCo.Auth.Intranet
+namespace Lib.AspNetCore.Auth.Intranet
 {
     public class AuthenticatedContext : ResultContext<IntranetAuthenticationOptions>
     {

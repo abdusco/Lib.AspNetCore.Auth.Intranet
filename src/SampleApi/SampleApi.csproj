@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AbdusCo.Auth.Intranet\AbdusCo.Auth.Intranet.csproj" />
+      <ProjectReference Include="..\Lib.AspNetCore.Auth.Intranet\Lib.AspNetCore.Auth.Intranet.csproj" />
     </ItemGroup>
 
 </Project>

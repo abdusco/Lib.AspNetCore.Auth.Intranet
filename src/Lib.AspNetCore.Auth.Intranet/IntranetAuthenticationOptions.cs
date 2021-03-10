@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using NetTools;
 
-namespace AbdusCo.Auth.Intranet
+namespace Lib.AspNetCore.Auth.Intranet
 {
     public class IntranetAuthenticationOptions : AuthenticationSchemeOptions
     {

@@ -1,4 +1,4 @@
-﻿namespace AbdusCo.Auth.Intranet
+﻿namespace Lib.AspNetCore.Auth.Intranet
 {
     public class IntranetAuthenticationDefaults
     {

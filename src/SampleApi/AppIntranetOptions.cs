@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AbdusCo.Auth.Intranet;
+using Lib.AspNetCore.Auth.Intranet;
 using NetTools;
 
 namespace SampleApi

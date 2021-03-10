@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AbdusCo.Auth.Intranet;
+using Lib.AspNetCore.Auth.Intranet;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -34,6 +34,7 @@ namespace SampleApi
                 {
                     options.Events.OnAuthenticated = context =>
                     {
+                        // assign roles to users authenticated with intranet
                         context.Principal = new ClaimsPrincipal(new ClaimsIdentity(
                             intranetOptions.AssignedRoles
                                 .Select(r => new Claim(ClaimTypes.Role, r))

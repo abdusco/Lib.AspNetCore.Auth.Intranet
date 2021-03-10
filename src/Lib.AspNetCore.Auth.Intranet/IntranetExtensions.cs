@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authentication;
 
-namespace AbdusCo.Auth.Intranet
+namespace Lib.AspNetCore.Auth.Intranet
 {
     public static class AuthenticationBuilderExtensions
     {

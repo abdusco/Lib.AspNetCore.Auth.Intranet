@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NetTools;
 
-namespace AbdusCo.Auth.Intranet
+namespace Lib.AspNetCore.Auth.Intranet
 {
     public class IntranetAuthenticationHandler : AuthenticationHandler<IntranetAuthenticationOptions>
     {
