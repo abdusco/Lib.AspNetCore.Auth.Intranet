@@ -19,7 +19,30 @@ dotnet nuget add package Lib.AspNetCore.Auth.Intranet
 
 ## Usage
 
-Set up authentication in your Startup class and add intranet authentication using `AddIntranet` extension method.
+Set up authentication in `ConfigureServices` method your Startup class and add intranet authentication
+using `AddIntranet` extension method. Remember to enable auth middlewares in `Configure` method.
+
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllers();    
+    services.AddAuthentication()
+        .AddIntranet();
+}
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseRouting();
+    // add auth middlewares after routing but before endpoints
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+}
+```
+
+If the application will be running behind a reverse proxy (IIS, Caddy, nginx etc.) you might want to enable proxy
+headers. Otherwise all requests will be originating from localhost (usually).
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -28,14 +51,17 @@ public void ConfigureServices(IServiceCollection services)
     {
         options.ForwardedHeaders = ForwardedHeaders.All;
     });
-    
-    services.AddControllers();
-    
-    var intranetOptions = Configuration.GetSection("IntranetAuth").Get<AppIntranetOptions>();
-    services.AddAuthentication()
-        .AddIntranet();
+    // ...
+}
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseForwardedHeaders();
+    // ...
 }
 ```
+
+## Configuration
 
 Simply adding the scheme without any options isn't really useful. By default it works based on whitelist principle, so
 you must specify any IP address you want to let in:
@@ -73,6 +99,8 @@ services.AddAuthentication()
         };
     });
 ```
+
+## Usage
 
 Then you can decorate your controllers or actions with `[Authorize]` attribute
 
