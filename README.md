@@ -128,8 +128,8 @@ Check out the sample project to see how it's all configured using `appsettings.j
 
 ## TODO
 
-- Whitelist and blacklist IP ranges
-- Support for delegates
+- [ ] Whitelist and blacklist IP ranges
+- [ ] Support for delegates
 
 ## Thanks
 
