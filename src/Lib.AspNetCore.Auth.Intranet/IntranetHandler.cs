@@ -15,9 +15,9 @@ namespace Lib.AspNetCore.Auth.Intranet
     public class IntranetHandler : AuthenticationHandler<IntranetOptions>
     {
         public IntranetHandler(IOptionsMonitor<IntranetOptions> options,
-                                             ILoggerFactory logger,
-                                             UrlEncoder encoder,
-                                             ISystemClock clock) : base(options, logger, encoder, clock)
+                               ILoggerFactory logger,
+                               UrlEncoder encoder,
+                               ISystemClock clock) : base(options, logger, encoder, clock)
         {
         }
 
@@ -36,8 +36,13 @@ namespace Lib.AspNetCore.Auth.Intranet
                 return messageReceivedContext.Result;
             }
 
-            var ipAddress = messageReceivedContext.IpAddress ?? Context.Connection.RemoteIpAddress ??
-                throw new ArgumentNullException(nameof(IPAddress), "IP address cannot be null");
+            var ipAddress = messageReceivedContext.IpAddress ?? Context.Connection.RemoteIpAddress;
+            if (ipAddress == null)
+            {
+                return AuthenticateResult.Fail(
+                    new ArgumentNullException(nameof(IPAddress), "IP address cannot be null"));
+            }
+
             var matchedRange = Options.AllowedIpRanges.FirstOrDefault(range => range.Contains(ipAddress));
             if (matchedRange == null)
             {
