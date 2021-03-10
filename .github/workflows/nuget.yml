@@ -16,6 +16,6 @@ jobs:
         # uses: brandedoutcast/publish-nuget@c12b8546b67672ee38ac87bea491ac94a587f7cc
         uses: brandedoutcast/publish-nuget@v2.5.5
         with:
-          PROJECT_FILE_PATH: src/Lib.AspNetCore.Auth.Intranet/Lib.AspNetCore.Auth.Intranet.csproj
+          PROJECT_FILE_PATH: ./src/Lib.AspNetCore.Auth.Intranet/Lib.AspNetCore.Auth.Intranet.csproj
           NUGET_KEY: ${{secrets.NUGET_TOKEN}}
           NUGET_SOURCE: https://api.nuget.org
