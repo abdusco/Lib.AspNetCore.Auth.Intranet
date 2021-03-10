@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetTools;
 
 namespace SampleApi
 {
@@ -18,6 +20,13 @@ namespace SampleApi
         }
 
         public IConfiguration Configuration { get; }
+        
+        private class AppIntranetOptions
+        {
+            public List<string> IpRanges { get; set; } = new List<string>();
+            public List<string> AssignedRoles { get; set; } = new List<string>();
+            public List<IPAddressRange> AllowedIpRanges => IpRanges.Select(IPAddressRange.Parse).ToList();
+        }
         
         public void ConfigureServices(IServiceCollection services)
         {
