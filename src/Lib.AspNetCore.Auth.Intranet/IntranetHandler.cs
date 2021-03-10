@@ -6,8 +6,10 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 
 #nullable enable
 namespace Lib.AspNetCore.Auth.Intranet
@@ -96,6 +98,13 @@ namespace Lib.AspNetCore.Auth.Intranet
             Logger.LogWarning("Hostname resolution for {IpAddress} timed out after {Timeout}", ipAddress,
                 Options.HostnameResolutionTimeout);
             return null;
+        }
+
+        protected override Task HandleChallengeAsync(AuthenticationProperties properties)
+        {
+            Response.StatusCode = StatusCodes.Status401Unauthorized;
+            Response.Headers.Append(HeaderNames.WWWAuthenticate, IntranetDefaults.AuthenticationScheme);
+            return Task.CompletedTask;
         }
     }
 }
