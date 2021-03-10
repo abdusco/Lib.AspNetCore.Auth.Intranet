@@ -132,3 +132,7 @@ Check out the sample project to see how it's all configured using `appsettings.j
 ## Thanks
 
 - J. Sakamoto for [IpAddressRange](https://github.com/jsakamoto/ipaddressrange) library
+
+## License
+
+[Mozilla Public License Version 2.0](https://github.com/abdusco/Lib.AspNetCore.Auth.Intranet/blob/master/LICENSE.txt)

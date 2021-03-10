@@ -5,7 +5,7 @@
         <Authors>Abdussamet Kocak</Authors>
         <WebPage>https://github.com/abdusco/Lib.AspNetCore.Auth.Intranet</WebPage>
         <Description>Intranet (or IP range) auth support for ASP.NET Core 3.1+</Description>
-
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
         <IncludeSource>true</IncludeSource>
