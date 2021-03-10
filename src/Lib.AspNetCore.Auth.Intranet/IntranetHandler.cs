@@ -12,18 +12,18 @@ using Microsoft.Extensions.Options;
 #nullable enable
 namespace Lib.AspNetCore.Auth.Intranet
 {
-    public class IntranetAuthenticationHandler : AuthenticationHandler<IntranetAuthenticationOptions>
+    public class IntranetHandler : AuthenticationHandler<IntranetOptions>
     {
-        public IntranetAuthenticationHandler(IOptionsMonitor<IntranetAuthenticationOptions> options,
+        public IntranetHandler(IOptionsMonitor<IntranetOptions> options,
                                              ILoggerFactory logger,
                                              UrlEncoder encoder,
                                              ISystemClock clock) : base(options, logger, encoder, clock)
         {
         }
 
-        protected new IntranetAuthenticationEvents Events
+        protected new IntranetEvents Events
         {
-            get => (IntranetAuthenticationEvents) base.Events!;
+            get => (IntranetEvents) base.Events!;
             set => base.Events = value;
         }
 

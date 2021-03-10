@@ -115,7 +115,7 @@ Then you can decorate your controllers or actions with `[Authorize]` attribute
 [Route("")]
 public class HomeController : ControllerBase
 {
-    [Authorize(AuthenticationSchemes = IntranetAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = IntranetDefaults.AuthenticationScheme)]
     [HttpGet]
     public Task<ActionResult> UserInfo()
     {

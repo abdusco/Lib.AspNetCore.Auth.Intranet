@@ -1,6 +1,6 @@
 ﻿namespace Lib.AspNetCore.Auth.Intranet
 {
-    public class IntranetAuthenticationDefaults
+    public class IntranetDefaults
     {
         public const string AuthenticationScheme = "Intranet";
     }
