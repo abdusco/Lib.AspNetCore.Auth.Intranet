@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -41,6 +42,9 @@ namespace SampleApi
             services.AddAuthentication()
                 .AddIntranet(options =>
                 {
+                    options.AllowedIpRanges = intranetOptions.AllowedIpRanges;
+                    options.HostnameResolutionTimeout = TimeSpan.FromSeconds(1);
+                    
                     options.Events.OnAuthenticated = context =>
                     {
                         // assign roles to users authenticated with intranet
@@ -51,7 +55,6 @@ namespace SampleApi
 
                         return Task.CompletedTask;
                     };
-                    options.AllowedIpRanges = intranetOptions.AllowedIpRanges;
                 });
         }
 
