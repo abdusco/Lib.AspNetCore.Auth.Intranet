@@ -11,7 +11,7 @@ allow requests coming from CI/CD machines to certain controllers.
 
 ## Installation
 
-Install the package from Nuget:
+Install the package from [Nuget](https://www.nuget.org/packages/Lib.AspNetCore.Auth.Intranet):
 
 ```
 dotnet nuget add package Lib.AspNetCore.Auth.Intranet

@@ -3,10 +3,10 @@
     <PropertyGroup>
         <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
         <Authors>Abdussamet Kocak</Authors>
+        <Company>AbdusCo</Company>
         <WebPage>https://github.com/abdusco/Lib.AspNetCore.Auth.Intranet</WebPage>
         <Description>Intranet (or IP range) auth support for ASP.NET Core 3.1+</Description>
-        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-
+        
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
         <IncludeSource>true</IncludeSource>
         <PackageProjectUrl>https://github.com/abdusco/Lib.AspNetCore.Auth.Intranet</PackageProjectUrl>
@@ -15,8 +15,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
-
-
+    
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
