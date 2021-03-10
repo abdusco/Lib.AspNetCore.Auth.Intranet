@@ -17,7 +17,7 @@ Install the package from [Nuget](https://www.nuget.org/packages/Lib.AspNetCore.A
 dotnet nuget add package Lib.AspNetCore.Auth.Intranet
 ``` 
 
-## Usage
+## Setup
 
 Set up authentication in `ConfigureServices` method your Startup class and add intranet authentication
 using `AddIntranet` extension method. Remember to enable auth middlewares in `Configure` method.
