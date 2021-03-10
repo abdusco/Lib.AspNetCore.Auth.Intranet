@@ -7,16 +7,16 @@ using NetTools;
 
 namespace Lib.AspNetCore.Auth.Intranet
 {
-    public class IntranetAuthenticationOptions : AuthenticationSchemeOptions
+    public class IntranetOptions : AuthenticationSchemeOptions
     {
-        public IntranetAuthenticationOptions()
+        public IntranetOptions()
         {
-            Events = new IntranetAuthenticationEvents();
+            Events = new IntranetEvents();
         }
 
-        public new IntranetAuthenticationEvents Events
+        public new IntranetEvents Events
         {
-            get => (IntranetAuthenticationEvents) base.Events;
+            get => (IntranetEvents) base.Events;
             set => base.Events = value;
         }
 

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Lib.AspNetCore.Auth.Intranet
 {
-    public class MessageReceivedContext: ResultContext<IntranetAuthenticationOptions>
+    public class MessageReceivedContext: ResultContext<IntranetOptions>
     {
-        public MessageReceivedContext(HttpContext context, AuthenticationScheme scheme, IntranetAuthenticationOptions authenticationOptions) : base(context, scheme, authenticationOptions)
+        public MessageReceivedContext(HttpContext context, AuthenticationScheme scheme, IntranetOptions options) : base(context, scheme, options)
         {
         }
 

@@ -3,6 +3,8 @@
 This is a small library for authenticating requests coming from inside an intranet (or any IP range) that integrates
 with ASP.NET Core auth stack seamlessly.
 
+[![](https://img.shields.io/nuget/v/Lib.AspNetCore.Auth.Intranet.svg)][nuget]
+
 ## Use case
 
 If have an app in your organization that's normally protected by an auth scheme, but you want to allow certain machines
@@ -11,13 +13,13 @@ allow requests coming from CI/CD machines to certain controllers.
 
 ## Installation
 
-Install the package from Nuget:
+Install the package from [Nuget][nuget]:
 
 ```
 dotnet nuget add package Lib.AspNetCore.Auth.Intranet
 ``` 
 
-## Usage
+## Setup
 
 Set up authentication in `ConfigureServices` method your Startup class and add intranet authentication
 using `AddIntranet` extension method. Remember to enable auth middlewares in `Configure` method.
@@ -75,15 +77,17 @@ services.AddAuthentication()
     });
 ```
 
-Refer to [IpAddressRange](https://github.com/jsakamoto/ipaddressrange) library to learn about the syntax.
+Refer to [IpAddressRange](https://github.com/jsakamoto/ipaddressrange) library to learn about the syntax. 
+You can check the how CIDRs are resolved [using this tool](https://www.ipaddressguide.com/cidr).
 
-Once the request IP is matched by any of the ranges, a `ClaimsPrincipal` is created with following claims:
+Once the request IP is matched by any of the ranges, a `ClaimsPrincipal` is created and populated with following the claims:
 
-- Name: Hostname resolved for the IP.  
+- **Name**: Hostname resolved for the IP.  
   Hostname resolution times out after 1 second, you can adjust it with `options.HostnameResolutionTimeout` option.
-- NameIdentifier: IP address
+  If it times out, IP address is used as the name.
+- **NameIdentifier**: IP address
 
-You can hook up to `options.Events.OnAuthenticated` and modify the claims principal.
+You can hook into `OnAuthenticated` event and modify the claims principal.
 
 ```c#
 services.AddAuthentication()
@@ -92,11 +96,9 @@ services.AddAuthentication()
         options.Events.OnAuthenticated = context =>
         {
             // assign admin role
-            context.Principal = new ClaimsPrincipal(new ClaimsIdentity(
-                new []{new Claim(ClaimTypes.Role, "admin")}.Concat(context.Principal.Claims), 
-                context.Scheme.Name
-            ));
-
+            var identity = (ClaimsIdentity) context.Principal.Identity;
+            identity.AddClaim(new Claim(ClaimTypes.Role, "admin"));
+            
             return Task.CompletedTask;
         };
     });
@@ -111,7 +113,7 @@ Then you can decorate your controllers or actions with `[Authorize]` attribute
 [Route("")]
 public class HomeController : ControllerBase
 {
-    [Authorize(AuthenticationSchemes = IntranetAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = IntranetDefaults.AuthenticationScheme)]
     [HttpGet]
     public Task<ActionResult> UserInfo()
     {
@@ -136,3 +138,5 @@ Check out the sample project to see how it's all configured using `appsettings.j
 ## License
 
 [Mozilla Public License Version 2.0](https://github.com/abdusco/Lib.AspNetCore.Auth.Intranet/blob/master/LICENSE.txt)
+
+[nuget]: https://www.nuget.org/packages/Lib.AspNetCore.Auth.Intranet

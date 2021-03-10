@@ -5,9 +5,9 @@ using NetTools;
 
 namespace Lib.AspNetCore.Auth.Intranet
 {
-    public class AddressMatchedContext : ResultContext<IntranetAuthenticationOptions>
+    public class AddressMatchedContext : ResultContext<IntranetOptions>
     {
-        public AddressMatchedContext(HttpContext context, AuthenticationScheme scheme, IntranetAuthenticationOptions options) :
+        public AddressMatchedContext(HttpContext context, AuthenticationScheme scheme, IntranetOptions options) :
             base(context, scheme, options)
         {
         }
