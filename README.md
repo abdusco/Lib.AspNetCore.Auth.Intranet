@@ -77,7 +77,7 @@ services.AddAuthentication()
     });
 ```
 
-Refer to [IpAddressRange](https://github.com/jsakamoto/ipaddressrange) library to learn about the syntax. 
+Refer to [IPAddressRange](https://github.com/jsakamoto/ipaddressrange) library to learn about the syntax. 
 You can check the how CIDRs are resolved [using this tool](https://www.ipaddressguide.com/cidr).
 
 Once the request IP is matched by any of the ranges, a `ClaimsPrincipal` is created and populated with following the claims:
@@ -133,7 +133,7 @@ Check out the sample project to see how it's all configured using `appsettings.j
 
 ## Thanks
 
-- J. Sakamoto for [IpAddressRange](https://github.com/jsakamoto/ipaddressrange) library
+- J. Sakamoto for [IPAddressRange](https://github.com/jsakamoto/ipaddressrange) library
 
 ## License
 
