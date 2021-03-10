@@ -41,13 +41,78 @@ namespace Lib.AspNetCore.Auth.Intranet.Tests
         }
 
         [Fact]
+        public async Task CanOverrideIpInsideHook()
+        {
+            using var host = await CreateHost(o =>
+            {
+                o.AllowedIpRanges.Add(IPAddressRange.Parse("1.1.1.1"));
+                o.Events.OnMessageReceived = context =>
+                {
+                    context.IpAddress = IPAddress.Parse("1.1.1.2");
+                    return Task.CompletedTask;
+                };
+            });
+
+            var client = host.GetTestClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, "/");
+
+            var response = await client.SendAsync(request);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+
+        [Fact]
+        public async Task CorrectRangeReturnedInMatchedHook()
+        {
+            var range = IPAddressRange.Parse("1.1.1.1");
+            using var host = await CreateHost(o =>
+            {
+                o.AllowedIpRanges.Add(range);
+                o.Events.OnAddressMatched = context =>
+                {
+                    Assert.Same(context.IpAddressRange, range);
+                    return Task.CompletedTask;
+                };
+            });
+
+            var client = host.GetTestClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, "/");
+            request.Headers.Add("X-Forwarded-For", "1.1.1.1");
+            var response = await client.SendAsync(request);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CanModifyPrincipalInAuthenticatedHook()
+        {
+            var range = IPAddressRange.Parse("1.1.1.1");
+            using var host = await CreateHost(o =>
+            {
+                o.AllowedIpRanges.Add(range);
+                o.Events.OnAuthenticated = context =>
+                {
+                    var identity = new ClaimsIdentity(new[] {new Claim(ClaimTypes.Name, "abdus")});
+                    context.Principal = new ClaimsPrincipal(identity);
+                    return Task.CompletedTask;
+                };
+            });
+
+            var client = host.GetTestClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, "/name");
+            request.Headers.Add("X-Forwarded-For", "1.1.1.1");
+            var response = await client.SendAsync(request);
+            Assert.Equal("abdus", await response.Content.ReadAsStringAsync());
+        }
+
+
+        [Fact]
         public async Task ClaimsAreSet()
         {
             var ipAddress = "1.1.1.1";
             using var host = await CreateHost(o => { o.AllowedIpRanges.Add(IPAddressRange.Parse(ipAddress)); });
 
             var client = host.GetTestClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, "/");
+            var request = new HttpRequestMessage(HttpMethod.Get, "/nameidentifier");
             request.Headers.Add("X-Forwarded-For", ipAddress);
             var response = await client.SendAsync(request);
             Assert.Equal(ipAddress, await response.Content.ReadAsStringAsync());
@@ -77,8 +142,17 @@ namespace Lib.AspNetCore.Auth.Intranet.Tests
                                     return;
                                 }
 
-                                await context.Response.WriteAsync(
-                                    context.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                                if (context.Request.Path == new PathString("/nameidentifier"))
+                                {
+                                    await context.Response.WriteAsync(
+                                        context.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                                }
+
+                                if (context.Request.Path == new PathString("/name"))
+                                {
+                                    await context.Response.WriteAsync(
+                                        context.User.FindFirstValue(ClaimTypes.Name));
+                                }
                             }));
                 }).Build();
             await host.StartAsync();
