@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,18 +27,16 @@ namespace Lib.AspNetCore.Auth.Intranet.Tests
         [InlineData("127.0.0.1", null, HttpStatusCode.Unauthorized)]
         public async Task IpMatchWorks(string range, string ip, HttpStatusCode statusCode)
         {
-            using var host = await CreateHost(o =>
-            {
-                o.AllowedIpRanges.Add(IPAddressRange.Parse(range));
-                o.Events.OnMessageReceived = context =>
-                {
-                    context.IpAddress = ip == null ? null : IPAddress.Parse(ip);
-                    return Task.CompletedTask;
-                };
-            });
+            using var host = await CreateHost(o => { o.AllowedIpRanges.Add(IPAddressRange.Parse(range)); });
 
             var client = host.GetTestClient();
-            var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/"));
+            var request = new HttpRequestMessage(HttpMethod.Get, "/");
+            if (ip != null)
+            {
+                request.Headers.Add("X-Forwarded-For", ip);
+            }
+
+            var response = await client.SendAsync(request);
             Assert.Equal(statusCode, response.StatusCode);
         }
 
@@ -45,18 +44,12 @@ namespace Lib.AspNetCore.Auth.Intranet.Tests
         public async Task ClaimsAreSet()
         {
             var ipAddress = "1.1.1.1";
-            using var host = await CreateHost(o =>
-            {
-                o.AllowedIpRanges.Add(IPAddressRange.Parse(ipAddress));
-                o.Events.OnMessageReceived = context =>
-                {
-                    context.IpAddress = IPAddress.Parse(ipAddress);
-                    return Task.CompletedTask;
-                };
-            });
+            using var host = await CreateHost(o => { o.AllowedIpRanges.Add(IPAddressRange.Parse(ipAddress)); });
 
             var client = host.GetTestClient();
-            var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/"));
+            var request = new HttpRequestMessage(HttpMethod.Get, "/");
+            request.Headers.Add("X-Forwarded-For", ipAddress);
+            var response = await client.SendAsync(request);
             Assert.Equal(ipAddress, await response.Content.ReadAsStringAsync());
         }
 
@@ -70,6 +63,10 @@ namespace Lib.AspNetCore.Auth.Intranet.Tests
                             collection
                                 .AddAuthentication(IntranetDefaults.AuthenticationScheme).AddIntranet(configure))
                         .Configure(applicationBuilder => applicationBuilder
+                            .UseForwardedHeaders(new ForwardedHeadersOptions
+                            {
+                                ForwardedHeaders = ForwardedHeaders.All
+                            })
                             .UseAuthentication()
                             .Use(async (context, next) =>
                             {
