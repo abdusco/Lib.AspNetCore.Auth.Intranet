@@ -3,6 +3,8 @@
 This is a small library for authenticating requests coming from inside an intranet (or any IP range) that integrates
 with ASP.NET Core auth stack seamlessly.
 
+[![](https://img.shields.io/nuget/v/Lib.AspNetCore.Auth.Intranet.svg)][nuget]
+
 ## Use case
 
 If have an app in your organization that's normally protected by an auth scheme, but you want to allow certain machines
@@ -11,7 +13,7 @@ allow requests coming from CI/CD machines to certain controllers.
 
 ## Installation
 
-Install the package from [Nuget](https://www.nuget.org/packages/Lib.AspNetCore.Auth.Intranet):
+Install the package from [Nuget][nuget]:
 
 ```
 dotnet nuget add package Lib.AspNetCore.Auth.Intranet
@@ -138,3 +140,5 @@ Check out the sample project to see how it's all configured using `appsettings.j
 ## License
 
 [Mozilla Public License Version 2.0](https://github.com/abdusco/Lib.AspNetCore.Auth.Intranet/blob/master/LICENSE.txt)
+
+[nuget]: https://www.nuget.org/packages/Lib.AspNetCore.Auth.Intranet
