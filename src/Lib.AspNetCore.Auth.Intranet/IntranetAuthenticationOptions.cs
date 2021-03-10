@@ -19,6 +19,9 @@ namespace Lib.AspNetCore.Auth.Intranet
             get => (IntranetAuthenticationEvents) base.Events;
             set => base.Events = value;
         }
+
         public virtual IList<IPAddressRange> AllowedIpRanges { get; set; } = new List<IPAddressRange>();
+
+        public TimeSpan HostnameResolutionTimeout { get; set; } = TimeSpan.FromSeconds(1);
     }
 }

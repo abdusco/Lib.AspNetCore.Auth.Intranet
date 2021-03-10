@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NetTools;
 
+#nullable enable
 namespace Lib.AspNetCore.Auth.Intranet
 {
     public class IntranetAuthenticationHandler : AuthenticationHandler<IntranetAuthenticationOptions>
@@ -45,7 +46,7 @@ namespace Lib.AspNetCore.Auth.Intranet
 
             var identity = new ClaimsIdentity(Scheme.Name);
 
-            var hostname = await GetHostnameAsync(ipAddress);
+            var hostname = await GetHostnameAsync(ipAddress) ?? ipAddress.ToString();
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, ipAddress.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Name, hostname));
 
@@ -67,10 +68,19 @@ namespace Lib.AspNetCore.Auth.Intranet
             return authenticatedContext.Result;
         }
 
-        private async Task<string> GetHostnameAsync(IPAddress ipAddress)
+        private async Task<string?> GetHostnameAsync(IPAddress ipAddress)
         {
-            var result = await Dns.GetHostEntryAsync(ipAddress);
-            return result.HostName;
+            var hostnameTask = Dns.GetHostEntryAsync(ipAddress);
+            var timeoutTask = Task.Delay(Options.HostnameResolutionTimeout, Context.RequestAborted);
+            var completed = await Task.WhenAny(hostnameTask, timeoutTask);
+            if (completed == hostnameTask)
+            {
+                return hostnameTask.Result.HostName;
+            }
+
+            Logger.LogWarning("Hostname resolution for {IpAddress} timed out after {Timeout}", ipAddress,
+                Options.HostnameResolutionTimeout);
+            return null;
         }
     }
 }
