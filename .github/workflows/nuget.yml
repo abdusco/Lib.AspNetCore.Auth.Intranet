@@ -11,11 +11,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Publish NuGet
-        # You may pin to the exact commit or the version.
-        # uses: brandedoutcast/publish-nuget@c12b8546b67672ee38ac87bea491ac94a587f7cc
-        uses: brandedoutcast/publish-nuget@v2.5.5
+      - uses: actions/checkout@v2
         with:
-          PROJECT_FILE_PATH: ./src/Lib.AspNetCore.Auth.Intranet/Lib.AspNetCore.Auth.Intranet.csproj
+          fetch-depth: 0
+
+      - name: publish nuget packages
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: "./src/Lib.AspNetCore.Auth.Intranet/Lib.AspNetCore.Auth.Intranet.csproj"
+          VERSION_STATIC: 1.0.0
           NUGET_KEY: ${{secrets.NUGET_TOKEN}}
           NUGET_SOURCE: https://api.nuget.org
+          INCLUDE_SYMBOLS: true
