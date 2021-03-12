@@ -31,6 +31,12 @@ namespace Lib.AspNetCore.Auth.Intranet
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            if (Options.AllowedIpRanges == null)
+            {
+                Logger.LogDebug("Allowed IP ranges isn't set");
+                return AuthenticateResult.NoResult();
+            }
+
             var messageReceivedContext = new MessageReceivedContext(Context, Scheme, Options);
             await Events.MessageReceived(messageReceivedContext);
             if (messageReceivedContext.Result != null)
