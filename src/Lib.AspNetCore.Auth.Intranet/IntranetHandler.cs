@@ -65,7 +65,7 @@ namespace Lib.AspNetCore.Auth.Intranet
                 return matchContext.Result;
             }
 
-            Logger.LogInformation("Connection from {IpAddress} is allowed by the range {IpRange}", ipAddress,
+            Logger.LogDebug("Connection from {IpAddress} is allowed by the range {IpRange}", ipAddress,
                 matchedRange.ToString());
             var identity = new ClaimsIdentity(Scheme.Name);
 
