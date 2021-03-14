@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Security;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -93,17 +94,25 @@ namespace Lib.AspNetCore.Auth.Intranet
 
         private async Task<string?> GetHostnameAsync(IPAddress ipAddress)
         {
-            var hostnameTask = Dns.GetHostEntryAsync(ipAddress);
-            var timeoutTask = Task.Delay(Options.HostnameResolutionTimeout, Context.RequestAborted);
-            var completed = await Task.WhenAny(hostnameTask, timeoutTask);
-            if (completed == hostnameTask)
+            try
             {
-                return hostnameTask.Result.HostName;
-            }
+                var hostnameTask = Dns.GetHostEntryAsync(ipAddress);
+                var timeoutTask = Task.Delay(Options.HostnameResolutionTimeout, Context.RequestAborted);
+                var completed = await Task.WhenAny(hostnameTask, timeoutTask);
+                if (completed == hostnameTask)
+                {
+                    return hostnameTask.Result.HostName;
+                }
 
-            Logger.LogWarning("Hostname resolution for {IpAddress} timed out after {Timeout}", ipAddress,
-                Options.HostnameResolutionTimeout);
-            return null;
+                Logger.LogWarning("Hostname resolution for {IpAddress} timed out after {Timeout}", ipAddress,
+                    Options.HostnameResolutionTimeout);
+                return null;
+            }
+            catch (SocketException e)
+            {
+                Logger.LogInformation("Failed to resolve hostname for {IpAddress}", e, ipAddress.ToString());
+                return null;
+            }
         }
 
         protected override Task HandleChallengeAsync(AuthenticationProperties properties)
