@@ -108,7 +108,7 @@ namespace Lib.AspNetCore.Auth.Intranet
                     Options.HostnameResolutionTimeout);
                 return null;
             }
-            catch (SocketException e)
+            catch (Exception e)
             {
                 Logger.LogInformation("Failed to resolve hostname for {IpAddress}", e, ipAddress.ToString());
                 return null;
